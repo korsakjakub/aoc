@@ -17,7 +17,6 @@ fs.readFile(filename, 'utf8', (err, data) => {
 				.map(str => Number(str))
 			);
 	});
-	// console.log(scratchCards);
 
 	const sum = scratchCards.map(sc => {
 		return sc[1].map(s => sc[0].includes(s))
