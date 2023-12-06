@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const filename = 'small.txt';
+const filename = 'input.txt';
 
 fs.readFile(filename, 'utf8', (err, data) => {
 if (err) {
@@ -9,7 +9,6 @@ if (err) {
 	}
 	const input = data.split('\n');
 	const seeds = input[0].split(':')[1].trim().split(' ').map(str => Number(str));
-	console.log(seeds)
 
 	const maps = [];
 	let tmp = [];
@@ -40,12 +39,19 @@ if (err) {
 			
 		}
 	});
-	console.log(almanac[0])
-
-	seeds.forEach(seed => traverse(seed, almanac))
-
+	
+	const places = seeds.map((seed) => {
+		return almanac.reduce(function(accumulator, currentValue) {
+			const t = traverse(accumulator, currentValue.ranges);
+			return t.length !== 0 ? t[0] : accumulator;
+			}, seed); 
+	});
+	console.log(Math.min.apply(null, places))
 });
 
-const traverse = (n, almanac) => {
-	
-};
+const traverse = (n, singleMap) => singleMap.map(range => {
+	if (range.src <= n && n <= range.src + range.l) {
+		const offset = n - range.src;
+		return range.dst + offset;
+	}
+}).filter(e => e !== undefined);
